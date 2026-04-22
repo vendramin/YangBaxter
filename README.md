@@ -18,5 +18,6 @@ Olexandr Konovalov, Leandro Vendramin
 Thanks go to:
 * Emiliano Acri
 * Marco Bonatto
+* Carsten Dietzel
 * Raúl Sastriques Guardiola
 * Arne Van Antwerpen
