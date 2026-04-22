@@ -1008,4 +1008,15 @@ function(obj1, obj2, sigma)
 end);
 
 
+InstallMethod(LambdaOrbit, "for a brace and an element thereof", [IsSkewbrace, IsSkewbraceElm ],
+function(B,g)
+  return Set(List(B, h -> Lambda(h,g)));
+end) ;
+
+InstallMethod(AllLambdaOrbits, "for a brace", [IsSkewbrace],
+function(B)
+  return Set(List(B, g -> LambdaOrbit(B,g))) ;
+end) ;
+
+
 

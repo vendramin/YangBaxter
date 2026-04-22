@@ -324,6 +324,8 @@ DeclareOperation("InverseLambda", [IsSkewbraceElm, IsSkewbraceElm]);
 DeclareOperation("Star", [IsSkewbraceElm, IsSkewbraceElm]);
 DeclareOperation("Star", [IsCollection, IsCollection]);
 DeclareOperation("Lambda2Permutation", [IsSkewbraceElm]);
+DeclareOperation("LambdaOrbit",[IsSkewbrace, IsSkewbraceElm ]) ; # done
+DeclareOperation("AllLambdaOrbits",[IsSkewbrace]) ; # done
 
 DeclareOperation("Random", [IsSkewbrace]);
 DeclareOperation("IsSkewbraceImplemented", [IsInt]);

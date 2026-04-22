@@ -83,24 +83,76 @@ InstallMethod(Ideals, "for a skew brace", [ IsSkewbrace ], function(obj)
   return res;
 end);
 
-InstallMethod(LeftIdeals, "for a skew brace", [ IsSkewbrace], function(obj)
-  local add, sg, l, subset, x, res, tmp;
-  l := [];
-  add := SkewbraceAList(obj);
-  for sg in AllSubgroups(Group(add)) do 
-    subset := List(sg, x->SkewbraceElmConstructor(obj, x));
-    if IsLeftIdeal(obj, subset) then
-      Add(l, subset);
-    fi;
-  od;
-  res := [];
-  for x in l do
-    tmp := SubSkewbrace(obj, x);
-    SetIsLeftIdealInParent(tmp, true);
-    Add(res, tmp);
-  od;
-  return res;
-end);
+#InstallMethod(LeftIdeals, "for a skew brace", [ IsSkewbrace], function(obj)
+#  local add, sg, l, subset, x, res, tmp;
+#  l := [];
+#  add := SkewbraceAList(obj);
+#  for sg in AllSubgroups(Group(add)) do 
+#    subset := List(sg, x->SkewbraceElmConstructor(obj, x));
+#    if IsLeftIdeal(obj, subset) then
+#      Add(l, subset);
+#    fi;
+#  od;
+#  res := [];
+#  for x in l do
+#    tmp := SubSkewbrace(obj, x);
+#    SetIsLeftIdealInParent(tmp, true);
+#    Add(res, tmp);
+#  od;
+#  return res;
+#end);
+
+InstallMethod(LeftIdeals, "for a skew brace", [ IsSkewbrace], 
+function(B)
+
+    local AllJoins, orbs, lisgrs, allids, allSBids, gr, new_id ;
+
+    AllJoins := function(lis) # computes all possible joins from a list of groups
+
+        local joins, new_joins, A ;
+
+        SortBy(lis, x -> -Size(lis)) ;
+
+        joins := [Group(())] ;
+
+        for A in lis do
+
+            new_joins := List(joins, B -> Group(Union(A,B))) ;
+
+            joins := Set(Union(joins,new_joins)) ;
+
+        od ;
+
+        return joins ;
+
+    end ;
+
+    orbs := AllLambdaOrbits(B) ;
+
+    lisgrs := List(orbs, o -> Group(List(o, g -> g![1]))) ;
+
+    lisgrs := Set(lisgrs) ;
+
+    allids := AllJoins(lisgrs) ;
+
+    allSBids := [] ;
+
+    for gr in allids do
+
+        new_id := SubSkewbrace(B, List(gr, x->SkewbraceElmConstructor(B, x)));
+        SetIsLeftIdealInParent(new_id, true);
+
+        Add(allSBids,new_id) ;
+
+    od ;
+
+    SortBy(allSBids,Size) ;
+
+    return allSBids ;
+
+end) ;
+
+
 
 InstallMethod(StrongLeftIdeals, "for a skew brace", [ IsSkewbrace], function(obj)
   local add, sg, l, subset, x, res, tmp;
