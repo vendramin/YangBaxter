@@ -347,9 +347,9 @@ function(size, number)
 
     obj := Skewbrace(List([1..Size(add)], k->[add[k], mul[k]]));
     SetIdSkewbrace( obj, [ size, number ] );
-    if size > 15 then
-      Unbind(NCBRACES[size]);
-    fi;
+    #if size > 15 then
+    #  Unbind(NCBRACES[size]);
+    #fi;
     return obj;
   else
     Error("there are just ", NrSmallSkewbraces(size), " skew braces of size ", size);
@@ -409,9 +409,9 @@ function(size, number)
     obj := Skewbrace(List([1..Size(add)], k->[add[k], mul[k]]));
     SetIdBrace( obj, [ size, number ] );
     SetIsClassical(obj, true);
-    if size > 15 then
-      Unbind(BRACES[size]);
-    fi;
+    #if size > 15 then
+    #  Unbind(BRACES[size]);
+    #fi;
     return obj;
   else
     Error("there are just ", NrSmallBraces(size), " braces of size ", size);
