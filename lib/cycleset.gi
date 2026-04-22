@@ -807,3 +807,97 @@ end);
 #  fi;
 #end);
 
+InstallMethod(PermutationBraceOfCycleSet, "for a cycle set", [IsCycleSet],
+function(C)
+
+    local per, siz, build_tables_1, build_tables_2, cyc_dict, t, pi, LG, res, addgr, gr, k, row, groupdic, p, sizG ;
+
+    build_tables_1 := function(perms,si,dict,leafs)  # leaves are elements which have only recently been reached
+
+        local new_leafs, y, g, h, tp, x, f, new_res ;
+
+        if Size(leafs) = 0 then return ; fi ;
+
+        new_leafs := [] ;
+
+        for tp in Cartesian([1..si],leafs) do
+
+            y := tp[1] ; g := tp[2] ;
+
+            h := perms[y] ;
+
+            if LookupDictionary(dict, [(),h*g]) = fail then
+                Add(new_leafs,h*g) ; 
+                AddDictionary(dict,[(),h*g],h*g) ;
+                for x in [1..si] do
+                    if LookupDictionary(dict, [perms[x],h*g]) = fail then
+                        f := perms[x] ;
+                        new_res := perms[y^perms[x]] * LookupDictionary(dict,[perms[x^perms[y]],g]) ;
+                        AddDictionary(dict,[f,h*g],new_res) ;
+                    fi ;
+                od ;
+            fi ;
+        od ;
+        build_tables_1(perms,si,dict,new_leafs) ;
+    end ;
+
+    build_tables_2 := function(perms,si,dict,leafs,LisG)
+        local i, h, new_res, new_leafs,g;
+
+        if Size(leafs) = 0 then return ; fi ;
+        new_leafs := [] ;
+
+        for g in leafs do
+
+            for i in [1..si] do
+
+                if LookupDictionary(dict,[g*perms[i],()]) = fail then
+
+                    Add(new_leafs,g*perms[i]) ;
+
+                    AddDictionary(dict,[g*perms[i],()],()) ;
+
+                    for h in LisG do
+                        new_res :=  LookupDictionary(dict,[perms[i],LookupDictionary(dict,[g,h])]) ;
+                        AddDictionary(dict,[g*perms[i],h],new_res) ;
+                    od ;
+                fi ;
+            od ;
+        od ;
+
+        build_tables_2(perms,si,dict,new_leafs,LisG) ;
+    end ;
+
+    per := Permutations(C) ;
+    siz := Size(C) ;
+    cyc_dict := NewDictionary([(1,2),(1,2)],true) ;
+    LG := List(Group(per)) ;
+    sizG := Size(LG) ;
+
+    AddDictionary(cyc_dict,[(),()],()) ;
+
+    for pi in Unique(per) do
+        AddDictionary(cyc_dict,[pi,()],()) ;
+    od ;
+
+    build_tables_1(per,siz,cyc_dict,[()]) ;
+    build_tables_2(per,siz,cyc_dict,Unique(per),LG) ;
+    for t in Tuples(LG,2) do
+        res := t[1] * LookupDictionary(cyc_dict,t) ;
+        AddDictionary(cyc_dict,t,res) ;
+    od ;
+    groupdic := NewDictionary((),true) ;
+    for k in [1..sizG] do
+        AddDictionary(groupdic,LG[k],k) ;
+    od ;
+    addgr := [] ;
+    for gr in LG do
+        row := List(LG, h -> LookupDictionary(cyc_dict,[gr,h])) ;
+        Add(addgr,PermList(List(row, h -> LookupDictionary(groupdic,h)))) ;
+    od ;
+    p := List([1..sizG], i -> [addgr[i],LG[i]]) ;
+    return Skewbrace(p) ;
+
+end) ;
+
+

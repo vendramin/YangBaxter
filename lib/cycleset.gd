@@ -75,6 +75,18 @@ DeclareOperation("Homology", [ IsCycleSet, IsInt ]);
 DeclareOperation("BettiNumbers", [ IsCycleSet, IsInt ]);
 DeclareOperation("Torsion", [ IsCycleSet, IsInt ]);
 
+#! @Arguments cycle set
+#! @Returns the permutation brace of a cycle set
+#! @Description
+#! Given a cycle set, we get the skew brace on the associated structure group
+#! @ExampleSession
+#! gap> cs := SmallCycleSet(8,14);;
+#! gap> br := CycleSet2IYB(cs);;
+#! gap> IdBrace(br);
+#! [ 12, 4 ]
+#! @EndExampleSession
+DeclareOperation("PermutationBraceOfCycleSet",[IsCycleSet]) ; # done
+
 ### Cycle sets of size <9
 ReadPackage("yangbaxter", "data/CSsmall.g");
 ReadPackage("yangbaxter", "data/CSsize6.g");
